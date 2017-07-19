@@ -28,7 +28,7 @@ import kr.co.namee.permissiongen.PermissionGen;
 import kr.co.namee.permissiongen.PermissionSuccess;
 
 /**
- * MAIN  孙长权
+ * MAIN  孙长权 啦啦
  */
 public class MainActivity extends AppCompatActivity {
 
