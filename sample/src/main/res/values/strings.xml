@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Wifi</string>
+    <string name="add_wifi">录入以上wifi</string>
+    <string name="start_service">启动服务</string>
+    <string name="intent_auto_start">跳转自启动管理</string>
+    <string name="hide">隐藏界面</string>
+    <string name="stop_service">停止服务</string>
+</resources>
