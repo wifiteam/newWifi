@@ -14,8 +14,8 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.xdandroid.sample.lib.IntentWrapper;
 import com.xdandroid.sample.adapter.MyAdapter;
+import com.xdandroid.sample.lib.IntentWrapper;
 import com.xdandroid.sample.utils.ToastUtils;
 import com.xdandroid.sample.utils.WifiAdmin;
 
@@ -28,7 +28,7 @@ import kr.co.namee.permissiongen.PermissionGen;
 import kr.co.namee.permissiongen.PermissionSuccess;
 
 /**
- * MAIN  孙长权 啦啦
+ * MAIN
  */
 public class MainActivity extends AppCompatActivity {
 
@@ -67,7 +67,6 @@ public class MainActivity extends AppCompatActivity {
         } else {
             afterRequestPermission();
         }
-
     }
 
     private void afterRequestPermission() {
@@ -160,36 +159,41 @@ public class MainActivity extends AppCompatActivity {
      * 添加录入
      */
     private void addWifi() {
-        if (etWifiSSid1.getText().toString().trim().equals("")
-                || etWifiSSid2.getText().toString().trim().equals("")
-                || etWifiPsd1.getText().toString().trim().equals("")
-                || etWifiPsd2.getText().toString().trim().equals("")) {
-            ToastUtils.toast(this, "请填写完整录入wifi数据");
-            return;
-        }
+        try {
+            if (etWifiSSid1.getText().toString().trim().equals("")
+                    || etWifiSSid2.getText().toString().trim().equals("")
+                    || etWifiPsd1.getText().toString().trim().equals("")
+                    || etWifiPsd2.getText().toString().trim().equals("")) {
+                ToastUtils.toast(this, "请填写完整录入wifi数据");
+                return;
+            }
 
-        if (wifiAdmin == null)
-            return;
+            if (wifiAdmin == null)
+                return;
 
-        // 判断A 网络是否配置过
-        if (wifiAdmin.isExsits(etWifiSSid1.getText().toString()) != null) {
-            ToastUtils.toast(this, "wifi1 已配置过 请勿重新配置!");
-        } else {
-            WifiConfiguration configuration1 = wifiAdmin.createWifiInfo(
-                    etWifiSSid1.getText().toString().trim(), etWifiPsd1.getText().toString().trim(),
-                    WifiAdmin.WifiCipherType.WIFICIPHER_WPA);
-            boolean c1 = wifiAdmin.addNetwork(configuration1);
-            Log.d(TAG, "-----------------------");
-            Log.d(TAG, "wifi1 连接状态 = " + c1);
-        }
-        if (wifiAdmin.isExsits(etWifiSSid2.getText().toString()) != null) {
-            ToastUtils.toast(this, "wifi2 已配置过 请勿重新配置!");
-            WifiConfiguration configuration2 = wifiAdmin.createWifiInfo(
-                    etWifiSSid2.getText().toString().trim(), etWifiPsd2.getText().toString().trim(),
-                    WifiAdmin.WifiCipherType.WIFICIPHER_WPA);
-            boolean c2 = wifiAdmin.addNetwork(configuration2);
-            Log.d(TAG, "wifi2 连接状态 = " + c2);
-            Log.d(TAG, "-----------------------");
+            // 判断A 网络是否配置过
+            if (wifiAdmin.isExsits(etWifiSSid1.getText().toString()) != null) {
+                ToastUtils.toast(this, "wifi1 已配置过 请勿重新配置!");
+            } else {
+                WifiConfiguration configuration1 = wifiAdmin.createWifiInfo(
+                        etWifiSSid1.getText().toString().trim(), etWifiPsd1.getText().toString().trim(),
+                        WifiAdmin.WifiCipherType.WIFICIPHER_WPA);
+                boolean c1 = wifiAdmin.addNetwork(configuration1);
+                Log.d(TAG, "-----------------------");
+                Log.d(TAG, "wifi1 连接状态 = " + c1);
+            }
+            if (wifiAdmin.isExsits(etWifiSSid2.getText().toString()) != null) {
+                ToastUtils.toast(this, "wifi2 已配置过 请勿重新配置!");
+            } else {
+                WifiConfiguration configuration2 = wifiAdmin.createWifiInfo(
+                        etWifiSSid2.getText().toString().trim(), etWifiPsd2.getText().toString().trim(),
+                        WifiAdmin.WifiCipherType.WIFICIPHER_WPA);
+                boolean c2 = wifiAdmin.addNetwork(configuration2);
+                Log.d(TAG, "wifi2 连接状态 = " + c2);
+                Log.d(TAG, "-----------------------");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

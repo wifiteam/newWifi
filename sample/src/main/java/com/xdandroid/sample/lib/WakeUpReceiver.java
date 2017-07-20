@@ -4,7 +4,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.xdandroid.sample.TraceServiceImpl;
 
@@ -29,7 +28,7 @@ public class WakeUpReceiver extends BroadcastReceiver {
             WatchDogService.cancelJobAlarmSub();
             return;
         }
-        Toast.makeText(context, "监听广播启动服务", Toast.LENGTH_SHORT).show();
+//        Toast.makeText(context, "监听广播启动服务", Toast.LENGTH_SHORT).show();
         DaemonEnv.initialize(context, TraceServiceImpl.class, DaemonEnv.DEFAULT_WAKE_UP_INTERVAL);
 
         if (!DaemonEnv.sInitialized) return;
@@ -46,7 +45,7 @@ public class WakeUpReceiver extends BroadcastReceiver {
             Log.d("MainActivity","监听广播启动服务");
             DaemonEnv.initialize(context, TraceServiceImpl.class, DaemonEnv.DEFAULT_WAKE_UP_INTERVAL);
 
-            Toast.makeText(context, "监听广播启动服务", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(context, "监听广播启动服务", Toast.LENGTH_SHORT).show();
             if (!DaemonEnv.sInitialized) return;
             try {
                 context.startService(new Intent(context, TraceServiceImpl.class));// TODO

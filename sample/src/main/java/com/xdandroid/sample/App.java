@@ -1,7 +1,7 @@
 package com.xdandroid.sample;
 
-import android.app.*;
-import android.content.*;
+import android.app.Application;
+import android.content.Intent;
 import android.util.Log;
 
 import com.xdandroid.sample.lib.DaemonEnv;

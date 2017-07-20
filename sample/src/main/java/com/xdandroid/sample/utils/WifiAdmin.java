@@ -101,6 +101,12 @@ public class WifiAdmin {
         mWifiManager.enableNetwork(mWifiConfiguration.get(index).networkId, true);
     }
 
+    // 指定配置好的网络进行连接
+    public void connectConfigID(WifiConfiguration configuration) {
+        // 连接配置好的指定ID的网络
+        mWifiManager.enableNetwork(configuration.networkId, true);
+    }
+
     public void startScan() {
         mWifiManager.startScan();
         // 得到扫描结果
@@ -136,6 +142,11 @@ public class WifiAdmin {
     // 得到接入点的BSSID
     public String getBSSID() {
         return (mWifiInfo == null) ? "NULL" : mWifiInfo.getBSSID();
+    }
+
+    // 得到接入点的BSSID
+    public String getSSID() {
+        return (mWifiInfo == null) ? "NULL" : mWifiInfo.getSSID();
     }
 
     // 得到IP地址

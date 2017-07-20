@@ -9,6 +9,9 @@ import android.util.Log;
 import com.xdandroid.sample.lib.AbsWorkService;
 import com.xdandroid.sample.utils.WifiAdmin;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -24,7 +27,7 @@ public class TraceServiceImpl extends AbsWorkService {
 
     private static final String TAG = "MainActivity";
 
-    private static final int LOOP_TIME =  3;
+    private static final int LOOP_TIME =  20;
     //是否 任务完成, 不再需要服务运行?
     public static boolean sShouldStopService;
     public static Disposable sDisposable;
@@ -40,7 +43,6 @@ public class TraceServiceImpl extends AbsWorkService {
     }
 
     private void afterRequestPermission(){
-
         if(!wifiAdmin.checkWifi()){
             Log.d(TAG,"MainActivity wifi未开启,需要开启wifi");
             // 开启wifi
@@ -63,8 +65,6 @@ public class TraceServiceImpl extends AbsWorkService {
 
     @Override
     public void startWork(Intent intent, int flags, int startId) {
-        // 初始化wifi管理类
-        wifiAdmin = new WifiAdmin(this);
        Log.d(TAG,"service startWork");
         sDisposable = Flowable
                 .interval(LOOP_TIME, TimeUnit.SECONDS)
@@ -84,8 +84,27 @@ public class TraceServiceImpl extends AbsWorkService {
                 });
     }
 
-
+//阿康所写
+//    private void doService(){
+//        // 判断是否开启wifi
+//        afterRequestPermission();
+//        Log.d(TAG,"扫描 wifi List");
+//        wifiAdmin.startScan();
+//        //附近范围的wifi列表 按强度由高到低显示
+//        List<ScanResult> wifiList = wifiAdmin.getWifiList();
+//        Log.d(TAG,"wifiList Size = " + wifiList.size());
+//        // 如果有MainActivity存在则刷新listView
+//        if(MainActivity.instance!=null)
+//            instance.upDateListView(wifiList);
+//        // 观察当前已配置wifi网络
+//        List<WifiConfiguration> configurations = wifiAdmin.getConfiguration();
+//        Log.d(TAG,"已配置的wifi size = " + configurations.size());
+//
+//    }
+    //帅比权
     private void doService(){
+        // 初始化wifi管理类
+        wifiAdmin = new WifiAdmin(this);
         // 判断是否开启wifi
         afterRequestPermission();
         Log.d(TAG,"扫描 wifi List");
@@ -99,7 +118,37 @@ public class TraceServiceImpl extends AbsWorkService {
         // 观察当前已配置wifi网络
         List<WifiConfiguration> configurations = wifiAdmin.getConfiguration();
         Log.d(TAG,"已配置的wifi size = " + configurations.size());
+        //----------------------------------------------------------------------
+        //已经配置好的且在扫描范围之内的wifi
+        List<ScanResult> sameList = new ArrayList<>();
+        List<WifiConfiguration> sameConfigList = new ArrayList<>();
+        for (ScanResult wifiBean : wifiList) {
+            for (WifiConfiguration configBean : configurations) {
+                if ((wifiBean.SSID).equals(configBean.SSID.replaceAll("\"", ""))) {
+                    sameList.add(wifiBean);
+                    sameConfigList.add(configBean);
+                }
+            }
+        }
+        if (sameList.size()>0){
+            Collections.sort(sameList,new CompareLevel());
+            String currentSSID = wifiAdmin.getSSID().replaceAll("\"","").trim();
+            //当前连接网络与信号最强的不一致
+            String MAXSSID=(sameList.get(sameList.size()-1).SSID).replaceAll("\"","").trim();
+            Log.d(TAG,"currentSSID:" + currentSSID+",当前信号最强的："+MAXSSID);
+            if(!MAXSSID.equals(currentSSID)){
+                WifiConfiguration configuration=wifiAdmin.isExsits(sameList.get(sameList.size() - 1).SSID);
+                wifiAdmin.disconnectWifi(wifiAdmin.getNetworkId());
+                wifiAdmin.connectConfigID(configuration);
+                sendMsg();
+            }
+        }
+    }
 
+    /**
+     * 发送消息
+     */
+    private void sendMsg() {
     }
 
 
@@ -126,5 +175,13 @@ public class TraceServiceImpl extends AbsWorkService {
     @Override
     public void onServiceKilled(Intent rootIntent) {
         Log.d(TAG,"服务被干掉");
+    }
+
+    class CompareLevel implements Comparator<ScanResult>{
+
+        @Override
+        public int compare(ScanResult a, ScanResult b) {
+            return a.level-b.level;
+        }
     }
 }
