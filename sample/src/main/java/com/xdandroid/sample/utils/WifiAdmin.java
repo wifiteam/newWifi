@@ -46,10 +46,14 @@ public class WifiAdmin {
     }
 
     // 打开WIFI
-    public void openWifi() {
+    public boolean openWifi() {
+
+        boolean bRet = true;
         if (!mWifiManager.isWifiEnabled()) {
-            mWifiManager.setWifiEnabled(true);
+            bRet = mWifiManager.setWifiEnabled(true);
         }
+
+        return bRet;
     }
 
     // 关闭WIFI
@@ -94,7 +98,7 @@ public class WifiAdmin {
             return;
         }
         // 连接配置好的指定ID的网络
-        mWifiManager.enableNetwork(mWifiConfiguration.get(index).networkId,true);
+        mWifiManager.enableNetwork(mWifiConfiguration.get(index).networkId, true);
     }
 
     public void startScan() {
@@ -128,6 +132,7 @@ public class WifiAdmin {
     public String getMacAddress() {
         return (mWifiInfo == null) ? "NULL" : mWifiInfo.getMacAddress();
     }
+
     // 得到接入点的BSSID
     public String getBSSID() {
         return (mWifiInfo == null) ? "NULL" : mWifiInfo.getBSSID();
@@ -142,6 +147,7 @@ public class WifiAdmin {
     public int getNetworkId() {
         return (mWifiInfo == null) ? 0 : mWifiInfo.getNetworkId();
     }
+
     //获取信号强度
     public int getRssi() {
         return (mWifiInfo == null) ? 0 : mWifiInfo.getRssi();
@@ -156,7 +162,7 @@ public class WifiAdmin {
     public boolean addNetwork(WifiConfiguration wcg) {
         int wcgID = mWifiManager.addNetwork(wcg);
         //连接netId所指的WIFI网络，并是其他的网络都被禁用
-        boolean b =  mWifiManager.enableNetwork(wcgID, true);
+        boolean b = mWifiManager.enableNetwork(wcgID, true);
 //        System.out.println("a--" + wcgID);
 //        System.out.println("b--" + b);
         return b;
@@ -224,13 +230,10 @@ public class WifiAdmin {
         return config;
     }
 
-    public WifiConfiguration getWifiConfig(String SSID)
-    {
+    public WifiConfiguration getWifiConfig(String SSID) {
         List<WifiConfiguration> existingConfigs = mWifiManager.getConfiguredNetworks();
-        for (WifiConfiguration existingConfig : existingConfigs)
-        {
-            if (existingConfig.SSID.equals("/"+SSID+"/"))
-            {
+        for (WifiConfiguration existingConfig : existingConfigs) {
+            if (existingConfig.SSID.equals("/" + SSID + "/")) {
                 return existingConfig;
             }
         }

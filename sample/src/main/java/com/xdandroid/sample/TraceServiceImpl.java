@@ -44,7 +44,8 @@ public class TraceServiceImpl extends AbsWorkService {
         if(!wifiAdmin.checkWifi()){
             Log.d(TAG,"MainActivity wifi未开启,需要开启wifi");
             // 开启wifi
-            wifiAdmin.openWifi();
+            boolean open = wifiAdmin.openWifi();
+            Log.d(TAG,"service 中开启wifi成功");
         }else{
             Log.d(TAG,"MainActivity wifi已开启");
         }

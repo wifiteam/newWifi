@@ -13,12 +13,15 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
+
 import com.xdandroid.sample.lib.IntentWrapper;
 import com.xdandroid.sample.adapter.MyAdapter;
 import com.xdandroid.sample.utils.ToastUtils;
 import com.xdandroid.sample.utils.WifiAdmin;
+
 import java.util.ArrayList;
 import java.util.List;
+
 import io.reactivex.disposables.Disposable;
 import kr.co.namee.permissiongen.PermissionFail;
 import kr.co.namee.permissiongen.PermissionGen;
@@ -72,7 +75,8 @@ public class MainActivity extends AppCompatActivity {
         if (!wifiAdmin.checkWifi()) {
             Log.d(TAG, "MainActivity wifi未开启,需要开启wifi");
             // 开启wifi
-            wifiAdmin.openWifi();
+            boolean open = wifiAdmin.openWifi();
+            Log.d(TAG, "MainActivity开启成功");
         } else {
             Log.d(TAG, "MainActivity wifi已开启");
         }
