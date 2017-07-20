@@ -13,15 +13,12 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
-
 import com.xdandroid.sample.lib.IntentWrapper;
 import com.xdandroid.sample.adapter.MyAdapter;
 import com.xdandroid.sample.utils.ToastUtils;
 import com.xdandroid.sample.utils.WifiAdmin;
-
 import java.util.ArrayList;
 import java.util.List;
-
 import io.reactivex.disposables.Disposable;
 import kr.co.namee.permissiongen.PermissionFail;
 import kr.co.namee.permissiongen.PermissionGen;
