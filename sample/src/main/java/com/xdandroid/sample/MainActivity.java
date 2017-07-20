@@ -35,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
     public static final String TAG = MainActivity.class.getSimpleName();
     // 权限请求码
     private static final int REQUEST_CODE_ASK_PERMISSIONS = 100;
-    private  List<ScanResult> mWifiList = new ArrayList<>();
+    private List<ScanResult> mWifiList = new ArrayList<>();
     // 显示附近wifi列表
     private ListView mListView;
     private EditText etWifiSSid1;
@@ -45,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
 
     private MyAdapter mAdapter;
     // 循环订阅事件
-    private  Disposable sDisposable;
+    private Disposable sDisposable;
     WifiAdmin wifiAdmin;
 
     public static MainActivity instance;
@@ -62,22 +62,22 @@ public class MainActivity extends AppCompatActivity {
                     .permissions(Manifest.permission.READ_PHONE_STATE,
                             Manifest.permission.ACCESS_FINE_LOCATION,
                             Manifest.permission.ACCESS_COARSE_LOCATION
-                            ,Manifest.permission.ACCESS_WIFI_STATE)
+                            , Manifest.permission.ACCESS_WIFI_STATE)
                     .request();
-        }else{
+        } else {
             afterRequestPermission();
         }
 
     }
 
-    private void afterRequestPermission(){
+    private void afterRequestPermission() {
         wifiAdmin = new WifiAdmin(this);
-        if(!wifiAdmin.checkWifi()){
-            Log.d(TAG,"MainActivity wifi未开启,需要开启wifi");
+        if (!wifiAdmin.checkWifi()) {
+            Log.d(TAG, "MainActivity wifi未开启,需要开启wifi");
             // 开启wifi
             wifiAdmin.openWifi();
-        }else{
-            Log.d(TAG,"MainActivity wifi已开启");
+        } else {
+            Log.d(TAG, "MainActivity wifi已开启");
         }
     }
 
@@ -95,22 +95,23 @@ public class MainActivity extends AppCompatActivity {
         etWifiSSid2.setText("i6");
         etWifiPsd2.setText("123456789");
         // 初始化附近wifi列表
-        mAdapter = new MyAdapter(this,mWifiList);
+        mAdapter = new MyAdapter(this, mWifiList);
         mListView.setAdapter(mAdapter);
     }
 
 
     /**
      * 刷新 service中使用注意线程问题 只能在UI线程中更新
+     *
      * @param wifiList
      */
-    public void upDateListView(final List<ScanResult> wifiList){
+    public void upDateListView(final List<ScanResult> wifiList) {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 mWifiList.clear();
                 mWifiList.addAll(wifiList);
-                Log.d(TAG,"wifiList Size = " + wifiList.size());
+                Log.d(TAG, "wifiList Size = " + wifiList.size());
                 mAdapter.notifyDataSetChanged();
             }
         });
@@ -119,13 +120,14 @@ public class MainActivity extends AppCompatActivity {
 
     /**
      * Button的点击事件
+     *
      * @param v
      */
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btn_start:
                 try {
-                    Log.d(TAG,"点击启动服务");
+                    Log.d(TAG, "点击启动服务");
                     TraceServiceImpl.sShouldStopService = false;
                     startService(new Intent(this, TraceServiceImpl.class));
                 } catch (Exception ignored) {
@@ -135,38 +137,58 @@ public class MainActivity extends AppCompatActivity {
                 IntentWrapper.whiteListMatters(this, "轨迹跟踪服务的持续运行");
                 break;
             case R.id.btn_stop:
-                Log.d(TAG,"点击停止服务");
+                Log.d(TAG, "点击停止服务");
                 TraceServiceImpl.stopService();
                 break;
             case R.id.add_wifi:
-                if(etWifiSSid1.getText().toString().trim().equals("")
-                        || etWifiSSid2.getText().toString().trim().equals("")
-                    || etWifiPsd1.getText().toString().trim().equals("")
-                    || etWifiPsd2.getText().toString().trim().equals(""))
-                {
-                    ToastUtils.toast(this,"请填写完整录入wifi数据");
-                    return;
-                }
-                // 添加配置网络
-                if(wifiAdmin!=null) {
-                    WifiConfiguration configuration1 = wifiAdmin.createWifiInfo(
-                            etWifiSSid1.getText().toString().trim(), etWifiPsd1.getText().toString().trim(),
-                            WifiAdmin.WifiCipherType.WIFICIPHER_WPA);
-                    WifiConfiguration configuration2 = wifiAdmin.createWifiInfo(
-                            etWifiSSid2.getText().toString().trim(), etWifiPsd2.getText().toString().trim(),
-                            WifiAdmin.WifiCipherType.WIFICIPHER_WPA);
-                    boolean c2 = wifiAdmin.addNetwork(configuration2);
-                    boolean c1 = wifiAdmin.addNetwork(configuration1);
-                    Log.d(TAG, "-----------------------");
-                    Log.d(TAG, "wifi1 连接状态 = " + c1);
-                    Log.d(TAG, "wifi2 连接状态 = " + c2);
-                    Log.d(TAG, "-----------------------");
+                // 添加录入网络
+                try {
+                    addWifi();
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
                 break;
             case R.id.hide:
                 // 隐藏界面
                 IntentWrapper.onBackPressed(this);
                 break;
+        }
+    }
+
+    /**
+     * 添加录入
+     */
+    private void addWifi() {
+        if (etWifiSSid1.getText().toString().trim().equals("")
+                || etWifiSSid2.getText().toString().trim().equals("")
+                || etWifiPsd1.getText().toString().trim().equals("")
+                || etWifiPsd2.getText().toString().trim().equals("")) {
+            ToastUtils.toast(this, "请填写完整录入wifi数据");
+            return;
+        }
+
+        if (wifiAdmin == null)
+            return;
+
+        // 判断A 网络是否配置过
+        if (wifiAdmin.isExsits(etWifiSSid1.getText().toString()) != null) {
+            ToastUtils.toast(this, "wifi1 已配置过 请勿重新配置!");
+        } else {
+            WifiConfiguration configuration1 = wifiAdmin.createWifiInfo(
+                    etWifiSSid1.getText().toString().trim(), etWifiPsd1.getText().toString().trim(),
+                    WifiAdmin.WifiCipherType.WIFICIPHER_WPA);
+            boolean c1 = wifiAdmin.addNetwork(configuration1);
+            Log.d(TAG, "-----------------------");
+            Log.d(TAG, "wifi1 连接状态 = " + c1);
+        }
+        if (wifiAdmin.isExsits(etWifiSSid2.getText().toString()) != null) {
+            ToastUtils.toast(this, "wifi2 已配置过 请勿重新配置!");
+            WifiConfiguration configuration2 = wifiAdmin.createWifiInfo(
+                    etWifiSSid2.getText().toString().trim(), etWifiPsd2.getText().toString().trim(),
+                    WifiAdmin.WifiCipherType.WIFICIPHER_WPA);
+            boolean c2 = wifiAdmin.addNetwork(configuration2);
+            Log.d(TAG, "wifi2 连接状态 = " + c2);
+            Log.d(TAG, "-----------------------");
         }
     }
 
@@ -201,7 +223,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if(instance!=null)
-            instance=null;
+        if (instance != null)
+            instance = null;
     }
 }
