@@ -17,6 +17,7 @@ import android.widget.Toast;
 
 import com.xdandroid.sample.adapter.MyAdapter;
 import com.xdandroid.sample.lib.IntentWrapper;
+import com.xdandroid.sample.lib.WeakLockManager;
 import com.xdandroid.sample.utils.ToastUtils;
 import com.xdandroid.sample.utils.WifiAdmin;
 
@@ -47,6 +48,8 @@ public class MainActivity extends AppCompatActivity {
     private MyAdapter mAdapter;
     // 循环订阅事件
     private Disposable sDisposable;
+
+    WeakLockManager weakLockManager;
     WifiAdmin wifiAdmin;
 
     public static MainActivity instance;
@@ -63,7 +66,8 @@ public class MainActivity extends AppCompatActivity {
                     .permissions(Manifest.permission.READ_PHONE_STATE,
                             Manifest.permission.ACCESS_FINE_LOCATION,
                             Manifest.permission.ACCESS_COARSE_LOCATION
-                            , Manifest.permission.ACCESS_WIFI_STATE)
+                            , Manifest.permission.ACCESS_WIFI_STATE,
+                            Manifest.permission.WAKE_LOCK)
                     .request();
         } else {
             afterRequestPermission();
@@ -88,6 +92,9 @@ public class MainActivity extends AppCompatActivity {
         etWifiPsd1 = (EditText) this.findViewById(R.id.et_1_psd);
         etWifiPsd2 = (EditText) this.findViewById(R.id.et_2_psd);
         mListView = (ListView) this.findViewById(R.id.wifi_list_view);
+        //锁屏管理
+//            weakLockManager = new WeakLockManager();
+//            weakLockManager.acquire();
         // 模拟手动输入
         //A
 //        etWifiSSid1.setText("k1");
@@ -129,7 +136,7 @@ public class MainActivity extends AppCompatActivity {
             case R.id.btn_start:
                 try {
                     Log.d(TAG, "点击启动服务");
-                    TraceServiceImpl.sShouldStopService = false;
+//                    TraceServiceImpl.sShouldStopService = false;
                     startService(new Intent(this, TraceServiceImpl.class));
                 } catch (Exception ignored) {
                 }
