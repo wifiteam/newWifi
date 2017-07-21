@@ -152,6 +152,10 @@ public class MainActivity extends AppCompatActivity {
                 // 隐藏界面
                 IntentWrapper.onBackPressed(this);
                 break;
+            case R.id.cancel_wifi:
+                // 跳转取消配置网络界面
+
+                break;
         }
     }
 

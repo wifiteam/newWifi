@@ -32,7 +32,7 @@ public class TraceServiceImpl extends AbsWorkService {
 
     private static final String TAG = "MainActivity";
 
-    private static final int LOOP_TIME = 20;
+    private static final int LOOP_TIME = 1;
     //是否 任务完成, 不再需要服务运行?
     public static boolean sShouldStopService;
     public static Disposable sDisposable;

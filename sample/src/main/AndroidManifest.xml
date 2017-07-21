@@ -85,6 +85,8 @@
             android:name=".lib.WatchDogService$WatchDogNotificationService"
             android:process=":watch"/>
 
+        <activity android:name=".CancelWifiListActivity"></activity>
+
     </application>
 
 </manifest>
