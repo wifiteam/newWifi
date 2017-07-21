@@ -89,11 +89,11 @@ public class MainActivity extends AppCompatActivity {
         mListView = (ListView) this.findViewById(R.id.wifi_list_view);
         // 模拟手动输入
         //A
-        etWifiSSid1.setText("k1");
-        etWifiPsd1.setText("5201314.");
-        // B
-        etWifiSSid2.setText("i6");
-        etWifiPsd2.setText("123456789");
+//        etWifiSSid1.setText("k1");
+//        etWifiPsd1.setText("5201314.");
+//        // B
+//        etWifiSSid2.setText("i6");
+//        etWifiPsd2.setText("123456789");
         // 初始化附近wifi列表
         mAdapter = new MyAdapter(this, mWifiList);
         mListView.setAdapter(mAdapter);
