@@ -23,6 +23,7 @@
             <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -32,16 +33,15 @@
 
                 <TextView
                     android:id="@+id/cancel_wifi"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_gravity="right"
                     android:onClick="onClick"
+                    android:text="点击前往设置取消配置指定网络"
                     android:textColor="@android:color/black"
-                    android:textSize="16sp"
-                    android:layout_width="wrap_content"
-                    android:text="点击取消配置指定网络"
-                    android:layout_height="wrap_content"/>
+                    android:textSize="16sp"/>
 
             </FrameLayout>
-
 
 
             <LinearLayout

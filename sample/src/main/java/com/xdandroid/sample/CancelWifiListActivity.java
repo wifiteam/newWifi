@@ -2,6 +2,7 @@ package com.xdandroid.sample;
 
 import android.content.Context;
 import android.net.wifi.WifiConfiguration;
+import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -32,6 +33,7 @@ public class CancelWifiListActivity extends AppCompatActivity
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_cancel_wifi_list);
         ListView listView = (ListView) findViewById(R.id.listview);
 
         wifiAdmin = new WifiAdmin(this);
@@ -67,7 +69,9 @@ public class CancelWifiListActivity extends AppCompatActivity
             tvCancel.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                  boolean isSuccess =   wifiAdmin.removeNetwork(bean.networkId);
+                    WifiManager mWifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
+                    boolean isSuccess =     mWifiManager.removeNetwork(bean.networkId);
+//                      mWifiManager.saveConfiguration();
                     if(isSuccess==true)
                     {
                         showMsg("取消成功");
