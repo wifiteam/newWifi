@@ -179,6 +179,7 @@ public class WifiAdmin {
         return b;
     }
 
+    // 移除指定wifi
     public boolean removeNetwork(int netId){
         boolean a = mWifiManager.removeNetwork(netId);
         return a;
