@@ -179,6 +179,11 @@ public class WifiAdmin {
         return b;
     }
 
+    public boolean removeNetwork(int netId){
+        boolean a = mWifiManager.removeNetwork(netId);
+        return a;
+    }
+
     // 断开指定ID的网络
     public void disconnectWifi(int netId) {
         mWifiManager.disableNetwork(netId);
