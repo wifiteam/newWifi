@@ -167,20 +167,13 @@ public class MainActivity extends AppCompatActivity {
      */
     private void addWifi() {
         try {
-            if (etWifiSSid1.getText().toString().trim().equals("")
-                    || etWifiSSid2.getText().toString().trim().equals("")
-                    || etWifiPsd1.getText().toString().trim().equals("")
-                    || etWifiPsd2.getText().toString().trim().equals("")) {
-                ToastUtils.toast(this, "请填写完整录入wifi数据");
-                return;
-            }
 
             if (wifiAdmin == null)
                 return;
 
             // 判断A 网络是否配置过
             if (wifiAdmin.isExsits(etWifiSSid1.getText().toString()) != null) {
-                ToastUtils.toast(this, "wifi1 已配置过 请勿重新配置!");
+                ToastUtils.toast(this, "wifi1 已配置过 ");
             } else {
                 WifiConfiguration configuration1 = wifiAdmin.createWifiInfo(
                         etWifiSSid1.getText().toString().trim(), etWifiPsd1.getText().toString().trim(),
@@ -190,7 +183,7 @@ public class MainActivity extends AppCompatActivity {
                 Log.d(TAG, "wifi1 连接状态 = " + c1);
             }
             if (wifiAdmin.isExsits(etWifiSSid2.getText().toString()) != null) {
-                ToastUtils.toast(this, "wifi2 已配置过 请勿重新配置!");
+                ToastUtils.toast(this, "wifi2 已配置过 ");
             } else {
                 WifiConfiguration configuration2 = wifiAdmin.createWifiInfo(
                         etWifiSSid2.getText().toString().trim(), etWifiPsd2.getText().toString().trim(),
