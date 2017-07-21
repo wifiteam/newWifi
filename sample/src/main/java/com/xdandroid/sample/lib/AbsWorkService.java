@@ -20,7 +20,7 @@ public abstract class AbsWorkService extends Service {
      */
     public static void cancelJobAlarmSub() {
         if (!DaemonEnv.sInitialized) return;
-        DaemonEnv.sApp.sendBroadcast(new Intent(WakeUpReceiver.ACTION_CANCEL_JOB_ALARM_SUB));
+//        DaemonEnv.sApp.sendBroadcast(new Intent(WakeUpReceiver.ACTION_CANCEL_JOB_ALARM_SUB));
     }
 
     /**

@@ -3,7 +3,6 @@ package com.xdandroid.sample.lib;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 
 import com.xdandroid.sample.TraceServiceImpl;
 
@@ -38,19 +37,19 @@ public class WakeUpReceiver extends BroadcastReceiver {
         }
     }
 
-    public static class WakeUpAutoStartReceiver extends BroadcastReceiver {
-
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            Log.d("MainActivity","监听广播启动服务");
-            DaemonEnv.initialize(context, TraceServiceImpl.class, DaemonEnv.DEFAULT_WAKE_UP_INTERVAL);
-
-//            Toast.makeText(context, "监听广播启动服务", Toast.LENGTH_SHORT).show();
-            if (!DaemonEnv.sInitialized) return;
-            try {
-                context.startService(new Intent(context, TraceServiceImpl.class));// TODO
-            } catch (Exception ignored) {
-            }
-        }
-    }
+//    public static class WakeUpAutoStartReceiver extends BroadcastReceiver {
+//
+//        @Override
+//        public void onReceive(Context context, Intent intent) {
+//            Log.d("MainActivity","监听广播启动服务");
+//            DaemonEnv.initialize(context, TraceServiceImpl.class, DaemonEnv.DEFAULT_WAKE_UP_INTERVAL);
+//
+////            Toast.makeText(context, "监听广播启动服务", Toast.LENGTH_SHORT).show();
+//            if (!DaemonEnv.sInitialized) return;
+//            try {
+//                context.startService(new Intent(context, TraceServiceImpl.class));// TODO
+//            } catch (Exception ignored) {
+//            }
+//        }
+//    }
 }

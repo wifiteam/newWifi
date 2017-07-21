@@ -10,7 +10,6 @@ import com.xdandroid.sample.lib.AbsWorkService;
 import com.xdandroid.sample.utils.WifiAdmin;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -72,8 +71,6 @@ public class TraceServiceImpl extends AbsWorkService {
     @Override
     public void startWork(Intent intent, int flags, int startId) {
         Log.d(TAG, "service startWork");
-        // 初始化wifi管理类
-        wifiAdmin = new WifiAdmin(this);
         sDisposable = Flowable
                 .interval(LOOP_TIME, TimeUnit.SECONDS)
                 //取消任务时取消定时唤醒
@@ -109,61 +106,83 @@ public class TraceServiceImpl extends AbsWorkService {
 //        Log.d(TAG,"已配置的wifi size = " + configurations.size());
 //
 //    }
+    /**
+     * 开关
+     */
+    boolean flag;
     //帅比权
     private void doService() {
+        // 初始化wifi管理类
+        wifiAdmin = new WifiAdmin(this);
+        if(!flag) {
+            flag=true;
+            // 判断是否开启wifi
+            afterRequestPermission();
+            Log.d(TAG, "扫描 wifi List");
+            wifiAdmin.startScan();
+            //附近范围的wifi列表 按强度由高到低显示
+            List<ScanResult> wifiList = wifiAdmin.getWifiList();
+            Log.d(TAG, "wifiList Size = " + wifiList.size());
+            // 如果有MainActivity存在则刷新listView
+            if (instance != null)
+                instance.upDateListView(wifiList);
+            Observable.create(new ObservableOnSubscribe<List<ScanResult>>() {
+                @Override
+                public void subscribe(@NonNull ObservableEmitter<List<ScanResult>> e) throws Exception {
+                    e.onNext(wifiAdmin.getWifiList());
+                    e.onComplete();
+                }
+            }).observeOn(Schedulers.io())
+                    .subscribeOn(Schedulers.io())
+                    .subscribe(new Consumer<List<ScanResult>>() {
+                        @Override
+                        public void accept(@NonNull List<ScanResult> scanResults) throws Exception {
+                            //已经配置好的且在扫描范围之内的wifi
+                            List<ScanResult> sameList = new ArrayList<>();
+                            // 观察当前已配置wifi网络
+                            List<WifiConfiguration> configurations = wifiAdmin.getConfiguration();
 
-        // 判断是否开启wifi
-        afterRequestPermission();
-        Log.d(TAG, "扫描 wifi List");
-        wifiAdmin.startScan();
-        //附近范围的wifi列表 按强度由高到低显示
-        List<ScanResult> wifiList = wifiAdmin.getWifiList();
-        Log.d(TAG, "wifiList Size = " + wifiList.size());
-        // 如果有MainActivity存在则刷新listView
-        if (MainActivity.instance != null)
-            instance.upDateListView(wifiList);
-
-        Observable.create(new ObservableOnSubscribe<List<ScanResult>>() {
-            @Override
-            public void subscribe(@NonNull ObservableEmitter<List<ScanResult>> e) throws Exception {
-                e.onNext(wifiAdmin.getWifiList());
-                e.onComplete();
-            }
-        }).observeOn(Schedulers.io())
-                .subscribeOn(Schedulers.io())
-                .subscribe(new Consumer<List<ScanResult>>() {
-                    @Override
-                    public void accept(@NonNull List<ScanResult> scanResults) throws Exception {
-                        //已经配置好的且在扫描范围之内的wifi
-                        List<ScanResult> sameList = new ArrayList<>();
-                        // 观察当前已配置wifi网络
-                        List<WifiConfiguration> configurations = wifiAdmin.getConfiguration();
-                        Log.d(TAG, "已配置的wifi size = " + configurations.size());
-                        List<WifiConfiguration> sameConfigList = new ArrayList<>();
-                        for (ScanResult wifiBean : scanResults) {
-                            for (WifiConfiguration configBean : configurations) {
-                                if ((wifiBean.SSID).equals(configBean.SSID.replaceAll("\"", ""))) {
-                                    sameList.add(wifiBean);
-                                    sameConfigList.add(configBean);
+                            List<WifiConfiguration> sameConfigList = new ArrayList<>();
+                            for (ScanResult wifiBean : scanResults) {
+                                for (WifiConfiguration configBean : configurations) {
+                                    if ((wifiBean.SSID).equals(configBean.SSID.replaceAll("\"", ""))) {
+                                        sameList.add(wifiBean);
+                                        sameConfigList.add(configBean);
+                                    }
                                 }
                             }
-                        }
-                        if (sameList.size() > 0) {
-                            Collections.sort(sameList, new CompareLevel());
-                            String currentSSID = wifiAdmin.getSSID().replaceAll("\"", "").trim();
-                            //当前连接网络与信号最强的不一致
-                            String MAX_SsID = (sameList.get(sameList.size() - 1).SSID).replaceAll("\"", "").trim();
-                            Log.d(TAG, "currentSSID:" + currentSSID + ",当前信号最强的：" + MAX_SsID);
-                            if (!MAX_SsID.equals(currentSSID)) {
-                                WifiConfiguration configuration = wifiAdmin.isExsits(sameList.get(sameList.size() - 1).SSID);
-                                wifiAdmin.disconnectWifi(wifiAdmin.getNetworkId());
-                                wifiAdmin.connectConfigID(configuration);
-                                sendMsg();
+                            Log.d("quanquan", "当前可以的已配置的wifi size = " + sameList.size());
+                            if (sameList.size() > 0) {
+//                                Collections.sort(sameList, new CompareLevel());
+                                for (int i = 0; i < sameList.size(); i++) {
+                                    String currentConnSSID = wifiAdmin.getSSID().replaceAll("\"", "").trim();
+                                    String currentSSID = (sameList.get(i).SSID).replaceAll("\"", "").trim();
+                                    if (!currentConnSSID.equals(currentSSID)) {
+                                        //// TODO: 2017/7/21 sendMsg
+                                        WifiConfiguration configuration = wifiAdmin.isExsits(sameList.get(i).SSID);
+                                        wifiAdmin.disconnectWifi(wifiAdmin.getNetworkId());
+                                        wifiAdmin.connectConfigID(configuration);
+                                        sendMsg();
+                                        Thread.sleep(2000);
+                                        Log.e("quanquan", "name:" + wifiAdmin.getSSID() + " 发送了消息");
+                                        wifiAdmin = new WifiAdmin(TraceServiceImpl.this);
+                                    }
+                                }
+                                flag=false;
+//                                String currentSSID = wifiAdmin.getSSID().replaceAll("\"", "").trim();
+//                                //当前连接网络与信号最强的不一致
+//                                String MAX_SsID = (sameList.get(sameList.size() - 1).SSID).replaceAll("\"", "").trim();
+//                                Log.d(TAG, "currentSSID:" + currentSSID + ",当前信号最强的：" + MAX_SsID);
+//                                if (!MAX_SsID.equals(currentSSID)) {
+//                                    WifiConfiguration configuration = wifiAdmin.isExsits(sameList.get(sameList.size() - 1).SSID);
+//                                    wifiAdmin.disconnectWifi(wifiAdmin.getNetworkId());
+//                                    wifiAdmin.connectConfigID(configuration);
+//                                    sendMsg();
+//                                }
                             }
                         }
-                    }
-                });
-
+                    });
+        }
     }
 
 
