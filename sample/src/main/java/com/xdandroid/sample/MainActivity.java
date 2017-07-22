@@ -30,11 +30,12 @@ import kr.co.namee.permissiongen.PermissionGen;
 import kr.co.namee.permissiongen.PermissionSuccess;
 
 /**
- * MAIN
+ * MAIN主界面
  */
 public class MainActivity extends AppCompatActivity {
 
     public static final String TAG = MainActivity.class.getSimpleName();
+
     // 权限请求码
     private static final int REQUEST_CODE_ASK_PERMISSIONS = 100;
     private List<ScanResult> mWifiList = new ArrayList<>();
@@ -48,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
     private MyAdapter mAdapter;
     // 循环订阅事件
     private Disposable sDisposable;
-
+    // wifi 锁屏管理
     WeakLockManager weakLockManager;
     WifiAdmin wifiAdmin;
 
@@ -93,15 +94,8 @@ public class MainActivity extends AppCompatActivity {
         etWifiPsd2 = (EditText) this.findViewById(R.id.et_2_psd);
         mListView = (ListView) this.findViewById(R.id.wifi_list_view);
         //锁屏管理
-            weakLockManager = new WeakLockManager();
-            weakLockManager.acquire();
-        // 模拟手动输入
-        //A
-//        etWifiSSid1.setText("k1");
-//        etWifiPsd1.setText("5201314.");
-//        // B
-//        etWifiSSid2.setText("i6");
-//        etWifiPsd2.setText("123456789");
+        weakLockManager = new WeakLockManager();
+        weakLockManager.acquire();
         // 初始化附近wifi列表
         mAdapter = new MyAdapter(this, mWifiList);
         mListView.setAdapter(mAdapter);
@@ -168,7 +162,6 @@ public class MainActivity extends AppCompatActivity {
                 break;
             case R.id.cancel_wifi:
                 // 跳转取消配置网络界面
-//                startActivity(new Intent(MainActivity.this,CancelWifiListActivity.class));
                 Intent intent = new Intent(Settings.ACTION_WIFI_SETTINGS);
                 startActivity(intent);
                 break;
@@ -217,6 +210,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    /**
+     * 6.0动态权限请求回调
+     * @param requestCode
+     * @param permissions
+     * @param grantResults
+     */
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         PermissionGen.onRequestPermissionsResult(this, requestCode, permissions, grantResults);

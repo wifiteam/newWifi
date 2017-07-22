@@ -18,6 +18,9 @@ import io.reactivex.Flowable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 
+/**
+ * 守护进程拉取服务
+ */
 public class WatchDogService extends Service {
 
     protected static final int HASH_CODE = 2;

@@ -20,7 +20,7 @@ public class UndeadReceiver extends BroadcastReceiver {
                 Intent.ACTION_MEDIA_MOUNTED.equals(intent.getAction())||
                 Intent.ACTION_MEDIA_UNMOUNTED.equals(intent.getAction())) {
             Log.d("undead", "开机启动");
-            //跳转至登录页
+            //跳转至主页
             Intent service = new Intent(context, MainActivity.class);
             context.startService(service);
             //启动应用,此处填写包名

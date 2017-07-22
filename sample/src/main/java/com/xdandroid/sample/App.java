@@ -7,6 +7,9 @@ import android.util.Log;
 
 import com.xdandroid.sample.lib.DaemonEnv;
 
+/**
+ * Application
+ */
 public class App extends Application {
 
     public static App instance;
@@ -18,7 +21,7 @@ public class App extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        Log.d("MainActivity"," app");
+        Log.d("MainActivity"," app启动");
         instance=this;
         DaemonEnv.initialize(this, TraceServiceImpl.class, DaemonEnv.DEFAULT_WAKE_UP_INTERVAL);
         try {

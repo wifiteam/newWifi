@@ -78,9 +78,6 @@ public class TraceServiceImpl extends AbsWorkService {
     public void startWork(Intent intent, int flags, int startId) {
         Log.d(TAG, "service startWork");
         flag = false;
-        wifiAdmin = new WifiAdmin(this);
-        wifiAdmin.creatWifiLock();
-        wifiAdmin.acquireWifiLock();
         sDisposable = Flowable
                 .interval(LOOP_TIME, TimeUnit.SECONDS)
                 //取消任务时取消定时唤醒
@@ -218,8 +215,6 @@ public class TraceServiceImpl extends AbsWorkService {
 
     @Override
     public void stopWork(Intent intent, int flags, int startId) {
-        wifiAdmin = new WifiAdmin(this);
-        wifiAdmin.releaseWifiLock();
         stopService();
     }
 
