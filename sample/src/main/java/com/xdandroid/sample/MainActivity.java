@@ -93,8 +93,8 @@ public class MainActivity extends AppCompatActivity {
         etWifiPsd2 = (EditText) this.findViewById(R.id.et_2_psd);
         mListView = (ListView) this.findViewById(R.id.wifi_list_view);
         //锁屏管理
-//            weakLockManager = new WeakLockManager();
-//            weakLockManager.acquire();
+            weakLockManager = new WeakLockManager();
+            weakLockManager.acquire();
         // 模拟手动输入
         //A
 //        etWifiSSid1.setText("k1");
