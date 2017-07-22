@@ -136,7 +136,7 @@ public class MainActivity extends AppCompatActivity {
             case R.id.btn_start:
                 try {
                     Log.d(TAG, "点击启动服务");
-//                    TraceServiceImpl.sShouldStopService = false;
+                    TraceServiceImpl.sShouldStopService = false;
                     startService(new Intent(this, TraceServiceImpl.class));
                 } catch (Exception ignored) {
                 }
@@ -158,7 +158,13 @@ public class MainActivity extends AppCompatActivity {
                 break;
             case R.id.hide:
                 // 隐藏界面
-                IntentWrapper.onBackPressed(this);
+//                IntentWrapper.onBackPressed(this);
+                Intent mHomeIntent = new Intent(Intent.ACTION_MAIN);
+
+                mHomeIntent.addCategory(Intent.CATEGORY_HOME);
+                mHomeIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK
+                        | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
+                startActivity(mHomeIntent);
                 break;
             case R.id.cancel_wifi:
                 // 跳转取消配置网络界面

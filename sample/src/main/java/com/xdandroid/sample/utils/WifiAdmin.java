@@ -83,7 +83,8 @@ public class WifiAdmin {
 
     // 创建一个WifiLock
     public void creatWifiLock() {
-        mWifiLock = mWifiManager.createWifiLock("Test");
+        mWifiLock = mWifiManager.createWifiLock(
+                WifiManager.WIFI_MODE_FULL_HIGH_PERF, "com.xdandroid.sample");
     }
 
     // 得到配置好的网络

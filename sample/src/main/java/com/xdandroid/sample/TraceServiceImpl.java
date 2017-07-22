@@ -78,6 +78,9 @@ public class TraceServiceImpl extends AbsWorkService {
     public void startWork(Intent intent, int flags, int startId) {
         Log.d(TAG, "service startWork");
         flag = false;
+        wifiAdmin = new WifiAdmin(this);
+        wifiAdmin.creatWifiLock();
+        wifiAdmin.acquireWifiLock();
         sDisposable = Flowable
                 .interval(LOOP_TIME, TimeUnit.SECONDS)
                 //取消任务时取消定时唤醒
@@ -116,7 +119,7 @@ public class TraceServiceImpl extends AbsWorkService {
     /**
      * 开关
      */
-    static boolean flag;
+    static boolean flag = false;
 
     //帅比权
     private void doService() {
@@ -125,10 +128,11 @@ public class TraceServiceImpl extends AbsWorkService {
             wifiAdmin = new WifiAdmin(this);
             // 判断是否开启wifi
             afterRequestPermission();
+            wifiAdmin.startScan();
             if (!flag) {
                 flag = true;
                 Log.d(TAG, "扫描 wifi List");
-                wifiAdmin.startScan();
+//                wifiAdmin.startScan();
                 //附近范围的wifi列表 按强度由高到低显示
                 List<ScanResult> wifiList = wifiAdmin.getWifiList();
                 Log.d(TAG, "wifiList Size = " + wifiList.size());
@@ -161,7 +165,7 @@ public class TraceServiceImpl extends AbsWorkService {
                                             }
                                         }
                                     }
-                                    Log.d("quanquan", "当前可以的已配置的wifi size = " + sameList.size());
+                                    Log.d(TAG, "当前可以的已配置的wifi size = " + sameList.size());
                                     if (sameList.size() > 0) {
 //                                Collections.sort(sameList, new CompareLevel());
                                         for (int i = 0; i < sameList.size(); i++) {
@@ -174,7 +178,7 @@ public class TraceServiceImpl extends AbsWorkService {
                                                 wifiAdmin.connectConfigID(configuration);
                                                 sendMsg();
                                                 Thread.sleep(2000);
-                                                Log.e("quanquan", "name:" + wifiAdmin.getSSID() + " 发送了消息");
+                                                Log.e(TAG, "name:" + wifiAdmin.getSSID() + " 发送了消息");
                                                 wifiAdmin = new WifiAdmin(TraceServiceImpl.this);
                                             }
                                         }
@@ -189,6 +193,8 @@ public class TraceServiceImpl extends AbsWorkService {
 //                                    wifiAdmin.connectConfigID(configuration);
 //                                    sendMsg();
 //                                }
+                                    }else{
+                                        flag = false;
                                     }
                                 } catch (Exception e) {
                                     e.printStackTrace();
@@ -206,11 +212,14 @@ public class TraceServiceImpl extends AbsWorkService {
      * 发送消息
      */
     private void sendMsg() {
+        Log.d(TAG,"send MSG");
     }
 
 
     @Override
     public void stopWork(Intent intent, int flags, int startId) {
+        wifiAdmin = new WifiAdmin(this);
+        wifiAdmin.releaseWifiLock();
         stopService();
     }
 

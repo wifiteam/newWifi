@@ -27,7 +27,7 @@ public class WeakLockManager {
         }
     }
 
-    public void release()
+    public void releease()
     {
         if (null != wakeLock)
         {
