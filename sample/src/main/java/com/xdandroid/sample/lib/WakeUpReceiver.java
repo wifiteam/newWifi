@@ -3,7 +3,9 @@ package com.xdandroid.sample.lib;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 
+import com.xdandroid.sample.MainActivity;
 import com.xdandroid.sample.TraceServiceImpl;
 
 public class WakeUpReceiver extends BroadcastReceiver {
@@ -27,7 +29,6 @@ public class WakeUpReceiver extends BroadcastReceiver {
             WatchDogService.cancelJobAlarmSub();
             return;
         }
-//        Toast.makeText(context, "监听广播启动服务", Toast.LENGTH_SHORT).show();
         DaemonEnv.initialize(context, TraceServiceImpl.class, DaemonEnv.DEFAULT_WAKE_UP_INTERVAL);
 
         if (!DaemonEnv.sInitialized) return;
@@ -37,19 +38,31 @@ public class WakeUpReceiver extends BroadcastReceiver {
         }
     }
 
-//    public static class WakeUpAutoStartReceiver extends BroadcastReceiver {
-//
-//        @Override
-//        public void onReceive(Context context, Intent intent) {
-//            Log.d("MainActivity","监听广播启动服务");
-//            DaemonEnv.initialize(context, TraceServiceImpl.class, DaemonEnv.DEFAULT_WAKE_UP_INTERVAL);
-//
-////            Toast.makeText(context, "监听广播启动服务", Toast.LENGTH_SHORT).show();
-//            if (!DaemonEnv.sInitialized) return;
-//            try {
-//                context.startService(new Intent(context, TraceServiceImpl.class));// TODO
-//            } catch (Exception ignored) {
-//            }
-//        }
-//    }
+    public static class WakeUpAutoStartReceiver extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+//            Log.d("MainActivity", "监听广播启动服务");
+            DaemonEnv.initialize(context, TraceServiceImpl.class, DaemonEnv.DEFAULT_WAKE_UP_INTERVAL);
+
+            if (Intent.ACTION_BOOT_COMPLETED.equals(intent.getAction()) ||
+                    Intent.ACTION_MEDIA_MOUNTED.equals(intent.getAction()) ||
+                    Intent.ACTION_MEDIA_UNMOUNTED.equals(intent.getAction())) {
+                Log.d("MainActivity", "开机启动");
+                Log.d("MainActivity", "------------------------------------");
+                //跳转至主页
+                Intent service = new Intent(context, MainActivity.class);
+                context.startService(service);
+                //启动应用,此处填写包名
+                Intent intent1 = context.getPackageManager().getLaunchIntentForPackage("com.xdandroid.sample");
+                context.startActivity(intent1);
+            }
+
+            if (!DaemonEnv.sInitialized) return;
+            try {
+                context.startService(new Intent(context, TraceServiceImpl.class));// TODO
+            } catch (Exception ignored) {
+            }
+        }
+    }
 }
