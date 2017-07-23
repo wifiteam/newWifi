@@ -150,7 +150,8 @@ public class TraceServiceImpl extends AbsWorkService {
                                     Log.d(TAG,"------");
 //                                Collections.sort(sameList, new CompareLevel());
                                     if (sameList.size() == 1) {
-                                        sendMsg();
+                                        ScanResult scanResult = sameList.get(0);
+//                                        sendMsg(scanResult.BSSID,scanResult.);
                                     } else if (sameList.size() > 1) {
                                         for (int i = 0; i < sameList.size(); i++) {
                                             // 当前连接的wifi账号
@@ -161,7 +162,7 @@ public class TraceServiceImpl extends AbsWorkService {
                                                 WifiConfiguration configuration = wifiAdmin.isExsits(sameList.get(i).SSID);
                                                 wifiAdmin.disconnectWifi(wifiAdmin.getNetworkId());
                                                 wifiAdmin.connectConfigID(configuration);
-                                                sendMsg();
+//                                                sendMsg();
                                                 Thread.sleep(2000);
                                                 Log.d(TAG, "name:" + wifiAdmin.getSSID() + " 发送了消息");
                                                 wifiAdmin = new WifiAdmin(TraceServiceImpl.this);
@@ -195,8 +196,10 @@ public class TraceServiceImpl extends AbsWorkService {
     /**
      * 发送消息
      */
-    private void sendMsg() {
+    private void sendMsg(String mac,String imie,String sim) {
         Log.d(TAG, "send MSG");
+        //MAC，手机串号和SIM卡号
+
     }
 
 
