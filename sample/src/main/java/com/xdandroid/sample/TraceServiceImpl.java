@@ -163,8 +163,10 @@ public class TraceServiceImpl extends AbsWorkService {
                                         }
                                     }
                                     Log.d(TAG, "当前可以的已配置的wifi size = " + sameList.size());
-                                    if (sameList.size() > 0) {
 //                                Collections.sort(sameList, new CompareLevel());
+                                    if (sameList.size() == 1) {
+                                        sendMsg();
+                                    } else if (sameList.size() > 1) {
                                         for (int i = 0; i < sameList.size(); i++) {
                                             String currentConnSSID = wifiAdmin.getSSID().replaceAll("\"", "").trim();
                                             String currentSSID = (sameList.get(i).SSID).replaceAll("\"", "").trim();
@@ -179,7 +181,6 @@ public class TraceServiceImpl extends AbsWorkService {
                                                 wifiAdmin = new WifiAdmin(TraceServiceImpl.this);
                                             }
                                         }
-                                        flag = false;
 //                                String currentSSID = wifiAdmin.getSSID().replaceAll("\"", "").trim();
 //                                //当前连接网络与信号最强的不一致
 //                                String MAX_SsID = (sameList.get(sameList.size() - 1).SSID).replaceAll("\"", "").trim();
@@ -190,11 +191,11 @@ public class TraceServiceImpl extends AbsWorkService {
 //                                    wifiAdmin.connectConfigID(configuration);
 //                                    sendMsg();
 //                                }
-                                    }else{
-                                        flag = false;
                                     }
                                 } catch (Exception e) {
                                     e.printStackTrace();
+                                }finally {
+                                    flag = false;
                                 }
                             }
                         });
@@ -209,7 +210,7 @@ public class TraceServiceImpl extends AbsWorkService {
      * 发送消息
      */
     private void sendMsg() {
-        Log.d(TAG,"send MSG");
+        Log.d(TAG, "send MSG");
     }
 
 
