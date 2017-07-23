@@ -113,12 +113,9 @@ public class TraceServiceImpl extends AbsWorkService {
             if (!flag) {
                 flag = true;
 //                wifiAdmin.startScan();
-                //附近范围的wifi列表 按强度由高到低显示
-                List<ScanResult> wifiList = wifiAdmin.getWifiList();
-                Log.d(TAG, "wifiList Size = " + wifiList.size());
-                // 如果有MainActivity存在则刷新listView
-                if (instance != null)
-                    instance.upDateListView(wifiList);
+//                //附近范围的wifi列表 按强度由高到低显示
+//                List<ScanResult> wifiList = wifiAdmin.getWifiList();
+//                Log.d(TAG, "wifiList Size = " + wifiList.size());
 
                 Observable.create(new ObservableOnSubscribe<List<ScanResult>>() {
                     @Override
@@ -149,6 +146,9 @@ public class TraceServiceImpl extends AbsWorkService {
                                     Log.d(TAG, "当前可用的已配置的wifi size = " + sameList.size());
                                     Log.d(TAG,"------");
 //                                Collections.sort(sameList, new CompareLevel());
+                                    // 如果有MainActivity存在则刷新listView
+                                    if (instance != null||sameList.size()>0)
+                                        instance.upDateListView(sameList);
                                     if (sameList.size() == 1) {
                                         ScanResult scanResult = sameList.get(0);
 //                                        sendMsg(scanResult.BSSID,scanResult.);
