@@ -147,7 +147,7 @@ public class TraceServiceImpl extends AbsWorkService {
                                     Log.d(TAG,"------");
 //                                Collections.sort(sameList, new CompareLevel());
                                     // 如果有MainActivity存在则刷新listView
-                                    if (instance != null||sameList.size()>0)
+                                    if (instance != null && sameList.size()>0)
                                         instance.upDateListView(sameList);
                                     if (sameList.size() == 1) {
                                         ScanResult scanResult = sameList.get(0);

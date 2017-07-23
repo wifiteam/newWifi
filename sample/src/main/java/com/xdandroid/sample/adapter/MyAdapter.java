@@ -42,35 +42,37 @@ public class MyAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
+        try {
+            convertView = inflater.inflate(R.layout.item_wifi_list, null);
 
-        convertView = inflater.inflate(R.layout.item_wifi_list, null);
+            TextView textView = (TextView) convertView.findViewById(R.id.textView);
+            TextView signal = (TextView) convertView.findViewById(R.id.signal_strenth);
+            TextView tvLevel = (TextView) convertView.findViewById(R.id.tv_level);
 
-        TextView textView = (TextView) convertView.findViewById(R.id.textView);
-        TextView signal = (TextView) convertView.findViewById(R.id.signal_strenth);
-        TextView tvLevel = (TextView) convertView.findViewById(R.id.tv_level);
+            ScanResult scanResult = list.get(position);
+            textView.setText(scanResult.SSID);
+            signal.setText(String.valueOf(Math.abs(scanResult.level)));
 
-        ScanResult scanResult = list.get(position);
-        textView.setText(scanResult.SSID);
-        signal.setText(String.valueOf(Math.abs(scanResult.level)));
+            int level = WifiManager.calculateSignalLevel(scanResult.level, 100);
 
-        int level = WifiManager.calculateSignalLevel(scanResult.level, 100);
-
-        //判断信号强度，显示对应的指示图标
-        if (Math.abs(scanResult.level) > 100) {
-            tvLevel.setText("无信号");
-        } else if (Math.abs(scanResult.level) > 80) {
-            tvLevel.setText("差");
-        } else if (Math.abs(scanResult.level) > 70) {
-            tvLevel.setText("较差");
-        } else if (Math.abs(scanResult.level) > 60) {
-            tvLevel.setText("一般");
-        } else if (Math.abs(scanResult.level) > 50) {
-            tvLevel.setText("较好");
-        } else {
-            tvLevel.setText("强");
+            //判断信号强度，显示对应的指示图标
+            if (Math.abs(scanResult.level) > 100) {
+                tvLevel.setText("无信号");
+            } else if (Math.abs(scanResult.level) > 80) {
+                tvLevel.setText("差");
+            } else if (Math.abs(scanResult.level) > 70) {
+                tvLevel.setText("较差");
+            } else if (Math.abs(scanResult.level) > 60) {
+                tvLevel.setText("一般");
+            } else if (Math.abs(scanResult.level) > 50) {
+                tvLevel.setText("较好");
+            } else {
+                tvLevel.setText("强");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return convertView;
-
     }
 
 

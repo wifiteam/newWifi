@@ -111,10 +111,14 @@ public class MainActivity extends AppCompatActivity {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                mWifiList.clear();
-                mWifiList.addAll(wifiList);
-                Log.d(TAG, "wifiList Size = " + wifiList.size());
-                mAdapter.notifyDataSetChanged();
+                try {
+                    mWifiList.clear();
+                    mWifiList.addAll(wifiList);
+                    Log.d(TAG, "wifiList Size = " + wifiList.size());
+                    mAdapter.notifyDataSetChanged();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         });
 
@@ -212,6 +216,7 @@ public class MainActivity extends AppCompatActivity {
 
     /**
      * 6.0动态权限请求回调
+     *
      * @param requestCode
      * @param permissions
      * @param grantResults
