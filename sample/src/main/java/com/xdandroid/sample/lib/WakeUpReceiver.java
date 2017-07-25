@@ -42,7 +42,6 @@ public class WakeUpReceiver extends BroadcastReceiver {
 
         @Override
         public void onReceive(Context context, Intent intent) {
-//            Log.d("MainActivity", "监听广播启动服务");
             DaemonEnv.initialize(context, TraceServiceImpl.class, DaemonEnv.DEFAULT_WAKE_UP_INTERVAL);
 
             if (Intent.ACTION_BOOT_COMPLETED.equals(intent.getAction()) ||

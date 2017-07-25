@@ -114,7 +114,6 @@ public class MainActivity extends AppCompatActivity {
                 try {
                     mWifiList.clear();
                     mWifiList.addAll(wifiList);
-//                    Log.d(TAG, "wifiList Size = " + wifiList.size());
                     mAdapter.notifyDataSetChanged();
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -158,7 +157,6 @@ public class MainActivity extends AppCompatActivity {
                 // 隐藏界面
 //                IntentWrapper.onBackPressed(this);
                 Intent mHomeIntent = new Intent(Intent.ACTION_MAIN);
-
                 mHomeIntent.addCategory(Intent.CATEGORY_HOME);
                 mHomeIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK
                         | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);

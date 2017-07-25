@@ -40,7 +40,7 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-
+        <!-- 主服务-->
         <service android:name=".TraceServiceImpl"/>
 
         <!-- 开机启动广播 -->
