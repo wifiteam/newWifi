@@ -109,7 +109,8 @@ public class WifiAdmin {
     }
 
     public void startScan() {
-        mWifiManager.startScan();
+        boolean isStart = mWifiManager.startScan();
+        Log.d("MainActivity", " startScan 执行? = " + isStart);
         // 得到扫描结果
         mWifiList = mWifiManager.getScanResults();
         // 得到配置好的网络连接
@@ -181,7 +182,7 @@ public class WifiAdmin {
     }
 
     // 移除指定wifi
-    public boolean removeNetwork(int netId){
+    public boolean removeNetwork(int netId) {
         mWifiManager.disableNetwork(netId);
         mWifiManager.disconnect();
         boolean a = mWifiManager.removeNetwork(netId);

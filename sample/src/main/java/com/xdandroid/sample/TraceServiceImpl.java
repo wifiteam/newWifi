@@ -108,14 +108,13 @@ public class TraceServiceImpl extends AbsWorkService {
             wifiAdmin = new WifiAdmin(this);
             // 判断是否开启wifi
             afterRequestPermission();
+            // 扫描
             wifiAdmin.startScan();
             Log.d(TAG, "start 扫描 wifi List");
             if (!flag) {
                 flag = true;
-//                wifiAdmin.startScan();
-//                //附近范围的wifi列表 按强度由高到低显示
                 //已经配置好的且在扫描范围之内的wifi
-                List<ScanResult> sameList = new ArrayList<ScanResult>();
+                List<ScanResult> sameList = new ArrayList<>();
                 // 观察当前已配置wifi网络
                 List<WifiConfiguration> configurations = wifiAdmin.getConfiguration();
 
@@ -131,7 +130,7 @@ public class TraceServiceImpl extends AbsWorkService {
                 // 如果有MainActivity存在则刷新listView
                 if (instance != null && sameList.size() > 0)
                     instance.upDateListView(sameList);
-
+                // 做连接发消息操作
                 Observable.create(new ObservableOnSubscribe<List<ScanResult>>() {
                     @Override
                     public void subscribe(@NonNull ObservableEmitter<List<ScanResult>> e) throws Exception {
@@ -145,11 +144,13 @@ public class TraceServiceImpl extends AbsWorkService {
                             public void accept(@NonNull List<ScanResult> scanResults) throws Exception {
                                 try {
                                     //已经配置好的且在扫描范围之内的wifi
+                                    Log.d(TAG,"扫描的wifiList size  = " + scanResults.size());
                                     List<ScanResult> sameList = new ArrayList<>();
                                     // 观察当前已配置wifi网络
                                     List<WifiConfiguration> configurations = wifiAdmin.getConfiguration();
 
                                     List<WifiConfiguration> sameConfigList = new ArrayList<>();
+
                                     for (ScanResult wifiBean : scanResults) {
                                         for (WifiConfiguration configBean : configurations) {
                                             if ((wifiBean.SSID).equals(configBean.SSID.replaceAll("\"", ""))) {
@@ -159,40 +160,26 @@ public class TraceServiceImpl extends AbsWorkService {
                                         }
                                     }
                                     Log.d(TAG, "当前可用的已配置的wifi size = " + sameList.size());
-                                    Log.d(TAG, "------");
-//                                Collections.sort(sameList, new CompareLevel());
-//                                    // 如果有MainActivity存在则刷新listView
-//                                    if (instance != null && sameList.size() > 0)
-//                                        instance.upDateListView(sameList);
+
                                     if (sameList.size() == 1) {
                                         ScanResult scanResult = sameList.get(0);
-//                                        sendMsg(scanResult.BSSID,scanResult.);
+                                        sendMsg();
                                     } else if (sameList.size() > 1) {
                                         for (int i = 0; i < sameList.size(); i++) {
                                             // 当前连接的wifi账号
                                             String currentConnSSID = wifiAdmin.getSSID().replaceAll("\"", "").trim();
                                             String currentSSID = (sameList.get(i).SSID).replaceAll("\"", "").trim();
                                             if (!currentConnSSID.equals(currentSSID)) {
-                                                //// TODO: 2017/7/21 sendMsg
+                                                //// TODO
                                                 WifiConfiguration configuration = wifiAdmin.isExsits(sameList.get(i).SSID);
                                                 wifiAdmin.disconnectWifi(wifiAdmin.getNetworkId());
                                                 wifiAdmin.connectConfigID(configuration);
-//                                                sendMsg();
+                                                sendMsg();
                                                 Thread.sleep(2000);
-                                                Log.d(TAG, "name:" + wifiAdmin.getSSID() + " 发送了消息");
+//                                                Log.d(TAG, "name:" + wifiAdmin.getSSID() + " 发送了消息");
                                                 wifiAdmin = new WifiAdmin(TraceServiceImpl.this);
                                             }
                                         }
-//                                String currentSSID = wifiAdmin.getSSID().replaceAll("\"", "").trim();
-//                                //当前连接网络与信号最强的不一致
-//                                String MAX_SsID = (sameList.get(sameList.size() - 1).SSID).replaceAll("\"", "").trim();
-//                                Log.d(TAG, "currentSSID:" + currentSSID + ",当前信号最强的：" + MAX_SsID);
-//                                if (!MAX_SsID.equals(currentSSID)) {
-//                                    WifiConfiguration configuration = wifiAdmin.isExsits(sameList.get(sameList.size() - 1).SSID);
-//                                    wifiAdmin.disconnectWifi(wifiAdmin.getNetworkId());
-//                                    wifiAdmin.connectConfigID(configuration);
-//                                    sendMsg();
-//                                }
                                     }
                                 } catch (Exception e) {
                                     e.printStackTrace();
@@ -205,15 +192,17 @@ public class TraceServiceImpl extends AbsWorkService {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
     }
 
 
     /**
      * 发送消息
      */
-    private void sendMsg(String mac, String imie, String sim) {
+    private void sendMsg() {
         Log.d(TAG, "send MSG");
         //MAC，手机串号和SIM卡号
+        Log.d(TAG, "------");
 
     }
 

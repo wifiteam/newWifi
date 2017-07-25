@@ -114,7 +114,7 @@ public class MainActivity extends AppCompatActivity {
                 try {
                     mWifiList.clear();
                     mWifiList.addAll(wifiList);
-                    Log.d(TAG, "wifiList Size = " + wifiList.size());
+//                    Log.d(TAG, "wifiList Size = " + wifiList.size());
                     mAdapter.notifyDataSetChanged();
                 } catch (Exception e) {
                     e.printStackTrace();

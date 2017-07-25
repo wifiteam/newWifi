@@ -42,7 +42,7 @@ public class MyAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        try {
+
             convertView = inflater.inflate(R.layout.item_wifi_list, null);
 
             TextView textView = (TextView) convertView.findViewById(R.id.textView);
@@ -69,9 +69,7 @@ public class MyAdapter extends BaseAdapter {
             } else {
                 tvLevel.setText("强");
             }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+
         return convertView;
     }
 
