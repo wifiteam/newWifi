@@ -14,23 +14,23 @@ import com.xdandroid.sample.App;
 public class WeakLockManager {
     PowerManager.WakeLock wakeLock = null;
 
-    public void acquire()
-    {
-        if (null == wakeLock)
-        {
-            PowerManager pm = (PowerManager) App.getmContext().getSystemService(Context.POWER_SERVICE);
-            wakeLock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK|PowerManager.ON_AFTER_RELEASE, "MyService");
-            if (null != wakeLock)
-            {
-                wakeLock.acquire();
+    public void acquire() {
+        try {
+            if (null == wakeLock) {
+                PowerManager pm = (PowerManager) App.getmContext().getSystemService(Context.POWER_SERVICE);
+                wakeLock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK | PowerManager.ON_AFTER_RELEASE,"MyService");
+//                wakeLock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK | PowerManager.ON_AFTER_RELEASE, TraceServiceImpl.class.getName());
+                if (null != wakeLock) {
+                    wakeLock.acquire();
+                }
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
-    public void releease()
-    {
-        if (null != wakeLock)
-        {
+    public void releease() {
+        if (null != wakeLock) {
             wakeLock.release();
             wakeLock = null;
         }

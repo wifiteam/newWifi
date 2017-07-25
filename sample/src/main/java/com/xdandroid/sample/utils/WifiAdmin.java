@@ -118,7 +118,7 @@ public class WifiAdmin {
 
     // 得到网络列表
     public List<ScanResult> getWifiList() {
-        sortByLevel((ArrayList<ScanResult>) mWifiList);
+//        sortByLevel((ArrayList<ScanResult>) mWifiList);
         return mWifiList;
     }
 

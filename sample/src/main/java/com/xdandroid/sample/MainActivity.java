@@ -93,9 +93,9 @@ public class MainActivity extends AppCompatActivity {
         etWifiPsd1 = (EditText) this.findViewById(R.id.et_1_psd);
         etWifiPsd2 = (EditText) this.findViewById(R.id.et_2_psd);
         mListView = (ListView) this.findViewById(R.id.wifi_list_view);
-        //锁屏管理
-        weakLockManager = new WeakLockManager();
-        weakLockManager.acquire();
+//        //锁屏管理
+//        weakLockManager = new WeakLockManager();
+//        weakLockManager.acquire();
         // 初始化附近wifi列表
         mAdapter = new MyAdapter(this, mWifiList);
         mListView.setAdapter(mAdapter);
@@ -247,5 +247,7 @@ public class MainActivity extends AppCompatActivity {
         super.onDestroy();
         if (instance != null)
             instance = null;
+        if (weakLockManager != null)
+            weakLockManager.releease();
     }
 }

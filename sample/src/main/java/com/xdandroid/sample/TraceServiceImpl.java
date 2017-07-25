@@ -114,8 +114,23 @@ public class TraceServiceImpl extends AbsWorkService {
                 flag = true;
 //                wifiAdmin.startScan();
 //                //附近范围的wifi列表 按强度由高到低显示
-//                List<ScanResult> wifiList = wifiAdmin.getWifiList();
-//                Log.d(TAG, "wifiList Size = " + wifiList.size());
+                //已经配置好的且在扫描范围之内的wifi
+                List<ScanResult> sameList = new ArrayList<ScanResult>();
+                // 观察当前已配置wifi网络
+                List<WifiConfiguration> configurations = wifiAdmin.getConfiguration();
+
+                List<ScanResult> wifiList = wifiAdmin.getWifiList();
+                for (ScanResult wifiBean : wifiList) {
+                    for (WifiConfiguration configBean : configurations) {
+                        if ((wifiBean.SSID).equals(configBean.SSID.replaceAll("\"", ""))) {
+                            sameList.add(wifiBean);
+                        }
+                    }
+                }
+                Log.d(TAG, "sameList Size = " + sameList.size());
+                // 如果有MainActivity存在则刷新listView
+                if (instance != null && sameList.size() > 0)
+                    instance.upDateListView(sameList);
 
                 Observable.create(new ObservableOnSubscribe<List<ScanResult>>() {
                     @Override
@@ -144,11 +159,11 @@ public class TraceServiceImpl extends AbsWorkService {
                                         }
                                     }
                                     Log.d(TAG, "当前可用的已配置的wifi size = " + sameList.size());
-                                    Log.d(TAG,"------");
+                                    Log.d(TAG, "------");
 //                                Collections.sort(sameList, new CompareLevel());
-                                    // 如果有MainActivity存在则刷新listView
-                                    if (instance != null && sameList.size()>0)
-                                        instance.upDateListView(sameList);
+//                                    // 如果有MainActivity存在则刷新listView
+//                                    if (instance != null && sameList.size() > 0)
+//                                        instance.upDateListView(sameList);
                                     if (sameList.size() == 1) {
                                         ScanResult scanResult = sameList.get(0);
 //                                        sendMsg(scanResult.BSSID,scanResult.);
@@ -181,7 +196,7 @@ public class TraceServiceImpl extends AbsWorkService {
                                     }
                                 } catch (Exception e) {
                                     e.printStackTrace();
-                                }finally {
+                                } finally {
                                     flag = false;
                                 }
                             }
@@ -196,7 +211,7 @@ public class TraceServiceImpl extends AbsWorkService {
     /**
      * 发送消息
      */
-    private void sendMsg(String mac,String imie,String sim) {
+    private void sendMsg(String mac, String imie, String sim) {
         Log.d(TAG, "send MSG");
         //MAC，手机串号和SIM卡号
 
